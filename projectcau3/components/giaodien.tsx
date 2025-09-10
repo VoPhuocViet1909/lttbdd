@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+
+const buttons = [
+  ['7', '8', '9', '/'],
+  ['4', '5', '6', '*'],
+  ['1', '2', '3', '-'],
+  ['0', 'C', '=', '+'],
+];
+
+export default function CalculatorUI() {
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState('');
+
+  const handlePress = (value) => {
+    if (value === 'C') {
+      setInput('');
+      setResult('');
+    } else if (value === '=') {
+      try {
+        setResult(eval(input).toString());
+      } catch {
+        setResult('Error');
+      }
+    } else {
+      setInput(input + value);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Khu vực hiển thị kết quả */}
+      <View style={styles.displayContainer}>
+        <Text style={styles.inputText}>{input}</Text>
+        <Text style={styles.resultText}>{result}</Text>
+      </View>
+      {/* Các nút số và phép toán */}
+      <View style={styles.buttonsContainer}>
+        {buttons.map((row, rowIndex) => (
+          <View key={rowIndex} style={styles.row}>
+            {row.map((btn) => (
+              <Pressable
+                key={btn}
+                style={styles.button}
+                onPress={() => handlePress(btn)}
+              >
+                <Text style={styles.buttonText}>{btn}</Text>
+              </Pressable>
+            ))}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, backgroundColor: '#fff', justifyContent: 'center' },
+  displayContainer: { marginBottom: 24, padding: 12, borderRadius: 8, backgroundColor: '#f5f5f5' },
+  inputText: { fontSize: 28, color: '#333', textAlign: 'right' },
+  resultText: { fontSize: 32, color: '#007AFF', textAlign: 'right', marginTop: 8 },
+  buttonsContainer: {},
+  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
+  button: { flex: 1, margin: 4, padding: 20, backgroundColor: '#e0e0e0', borderRadius: 8, alignItems: 'center' },
+  buttonText: { fontSize: 24, color: '#333' },
+});
